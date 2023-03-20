@@ -3,10 +3,17 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.springframework.org/schema/beans
         https://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--配置代理Service-->
+    <bean id="proxyAccountService" factory-bean="beanFactory" factory-method="getAccountService"></bean>
+    <!--配置beanfactory-->
+    <bean id="beanFactory" class="com.yanxia.study.factory.BeanFactory">
+        <!--注入Service-->
+        <property name="accountService" ref="accountService"></property>
+        <property name="transactionManager" ref="transactionManager"></property>
+    </bean>
     <!--配置Service-->
     <bean id="accountService" class="com.yanxia.study.service.impl.AccountServiceImpl">
         <property name="accountDao" ref="accountDao"/>
-        <property name="transactionManager" ref="transactionManager"></property>
     </bean>
 
     <!--配置Dao对象-->

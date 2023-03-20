@@ -11,12 +11,6 @@ import java.util.List;
 public class AccountServiceImpl implements IAccountService {
     private IAccountDao accountDao;
 
-    public void setTransactionManager(TransactionManager transactionManager) {
-        this.transactionManager = transactionManager;
-    }
-
-    private TransactionManager transactionManager;
-
     @Override
     public List<Account> findAllAccount() {
         List<Account> accountList = null;
@@ -57,26 +51,21 @@ public class AccountServiceImpl implements IAccountService {
      */
     @Override
     public void transfer(String sourceName, String targetName, Float money) {
+        System.out.println("transfer开始执行");
         //根据名称查询转出账户
         //根据名称查询转出账户
         //转出账户减钱
         //转入账户加钱
         //更新转出账户，更新转入账户
         try {
-            transactionManager.beginTransation();
             Account sourceAccount = accountDao.findAccountByName(sourceName);
             Account targetAccount = accountDao.findAccountByName(targetName);
             sourceAccount.setMoney(sourceAccount.getMoney() - money);
             targetAccount.setMoney(targetAccount.getMoney() + money);
             accountDao.updateAccount(sourceAccount);
-            int i = 1/0;
             accountDao.updateAccount(targetAccount);
-            transactionManager.commit();
         } catch (Exception e) {
-            transactionManager.rollback();
             throw new RuntimeException(e);
-        } finally {
-            transactionManager.release();
         }
     }
 
